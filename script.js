@@ -1,5 +1,7 @@
 // let a = "1 + 2";
-console.log(evaluateExp("1.1+2*5%(3+4/(6-5))"));
+let expression = "";
+// console.log(evaluateExp("1.1+2*5%(3+4/(6-5))"));
+addButtonsEventListeners();
 
 function evaluateExp(expression) {
     let valueArray = [];
@@ -11,7 +13,6 @@ function evaluateExp(expression) {
             for (let j = i + 1; j < expression.length; j++, i++) {
                 let numberChar = expression[j];
                 if (isLeftParan(numberChar) || isRightParan(numberChar) || isOperator(numberChar)) {
-                    // i = j - 1;
                     break;
                 }
                 operandValue += numberChar;
@@ -87,4 +88,38 @@ function partialEvaluation(operator, firstValue, secondValue) {
         default:
             return 0;
     }
+}
+
+function addButtonsEventListeners() {
+    handleUndoBtn();
+    let btns = Array.from(document.querySelectorAll(".btn-container button"));
+    btns.forEach(button => {
+        if (button.value === "clear")
+            handleClearBtn(button);
+        else if (button.value === "equal")
+            button.addEventListener("click", showResult);
+        else button.addEventListener("click", () => {
+            expression += button.value;
+        });
+    });
+}
+
+function showResult() {
+    console.log(evaluateExp(expression));
+    expression = "";
+}
+
+function handleUndoBtn() {
+    let undoBtn = document.querySelector("#clear-last");
+    undoBtn.addEventListener("click", () => {
+        expression = expression.slice(0, expression.length - 1);
+        console.log(expression);
+    });
+}
+
+function handleClearBtn(button) {
+    button.addEventListener("click", () => {
+        expression = "";
+        console.log("cleared!");
+    });
 }
