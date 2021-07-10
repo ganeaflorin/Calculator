@@ -2,8 +2,9 @@ html,
 body {
     margin: 0;
     height: 100%;
-    background-color: #EDC7B7;
+    background-color: #f1d4d4;
     font-family: 'Times New Roman', Times, serif;
+    color: white;
 }
 
 body {
@@ -18,7 +19,7 @@ body {
     max-height: 40em;
     max-width: 35em;
     border-radius: 2%;
-    background-color: #123C69;
+    background-color: #65CCB8;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -40,14 +41,30 @@ button {
     height: 6em;
     width: 6em;
     border-radius: 10%;
-    background-color: #BAB2B5;
+    background-color: #182628;
+    color: white;
+    cursor: grab;
 }
 
 .display {
     width: 70%;
     height: 80%;
     border-radius: 1%;
-    background-color: #EEE2DC;
+    background-color: #182628;
+    position: relative;
+}
+
+.display__expression {
+    position: absolute;
+    right: 5%;
+    top: 30%;
+    font-size: xx-large;
+}
+
+.display__partial-result {
+    position: absolute;
+    right: 6%;
+    top: 70%;
 }
 
 .display-container {

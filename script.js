@@ -22,7 +22,7 @@ function evaluateExp(expression) {
         if (isLeftParan(char))
             operatorArray.push(char);
         if (isRightParan(char)) {
-            while (!isLeftParan((operator = operatorArray.pop()))) {
+            while (!isLeftParan((operator = operatorArray.pop())) && operatorArray.length > 0) {
                 let secondVal = valueArray.pop();
                 let firstVal = valueArray.pop();
                 valueArray.push(partialEvaluation(operator, firstVal, secondVal));
@@ -100,26 +100,52 @@ function addButtonsEventListeners() {
             button.addEventListener("click", showResult);
         else button.addEventListener("click", () => {
             expression += button.value;
+            showExpression();
+            showPartialResult();
         });
     });
 }
 
+function showExpression() {
+    let display = document.querySelector(".display__expression");
+    display.textContent = expression;
+}
+
+function showPartialResult() {
+    let display = document.querySelector(".display__partial-result");
+    if (evaluateExp(expression))
+        display.textContent = evaluateExp(expression);
+    else display.textContent = "";
+}
+
 function showResult() {
-    console.log(evaluateExp(expression));
-    expression = "";
+    if (evaluateExp(expression)) {
+        expression = evaluateExp(expression);
+        showExpression();
+    } else {
+        showWrongResultWarning();
+    }
+    showPartialResult();
+}
+
+function showWrongResultWarning() {
+    let display = document.querySelector(".display__expression");
+    display.textContent = "bad expression";
 }
 
 function handleUndoBtn() {
     let undoBtn = document.querySelector("#clear-last");
     undoBtn.addEventListener("click", () => {
         expression = expression.slice(0, expression.length - 1);
-        console.log(expression);
+        showExpression();
+        showPartialResult();
     });
 }
 
 function handleClearBtn(button) {
     button.addEventListener("click", () => {
         expression = "";
-        console.log("cleared!");
+        showExpression();
+        showPartialResult();
     });
 }
