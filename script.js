@@ -149,3 +149,12 @@ function handleClearBtn(button) {
         showPartialResult();
     });
 }
+
+/*
+TODOS:
+- keyboard support
+- divide by 0
+- button styling
+- fancy error display
+
+*/
