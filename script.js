@@ -1,6 +1,4 @@
-// let a = "1 + 2";
 let expression = "";
-// console.log(evaluateExp("1.1+2*5%(3+4/(6-5))"));
 addButtonsEventListeners();
 
 function evaluateExp(expression) {
@@ -9,42 +7,49 @@ function evaluateExp(expression) {
     for (let i = 0; i < expression.length; i++) {
         let char = expression[i];
         if (isNumber(char)) {
-            let operandValue = char;
-            for (let j = i + 1; j < expression.length; j++, i++) {
-                let numberChar = expression[j];
-                if (isLeftParan(numberChar) || isRightParan(numberChar) || isOperator(numberChar)) {
-                    break;
-                }
-                operandValue += numberChar;
-            }
-            valueArray.push(+operandValue);
+            i = handleMultipleCharacterOperand(valueArray, char, i);
         }
         if (isLeftParan(char))
             operatorArray.push(char);
         if (isRightParan(char)) {
             while (!isLeftParan((operator = operatorArray.pop())) && operatorArray.length > 0) {
-                let secondVal = valueArray.pop();
-                let firstVal = valueArray.pop();
-                valueArray.push(partialEvaluation(operator, firstVal, secondVal));
+                valueArray.push(partialEvaluation(operator, valueArray.pop(), valueArray.pop()));
             }
         }
         if (isOperator(char)) {
-            while (operatorArray.length && getPriority(char) < getPriority(operatorArray[operatorArray.length - 1])) {
-                let operator = operatorArray.pop();
-                let secondVal = valueArray.pop();
-                let firstVal = valueArray.pop();
-                valueArray.push(partialEvaluation(operator, firstVal, secondVal));
+            //treating negative operands (-7 + 5)
+            if (i == 0 || !isNumber(expression[i - 1])) {
+                i = handleMultipleCharacterOperand(valueArray, char, i);
+
+            } else {
+                while (operatorArray.length && getPriority(char) < getPriority(operatorArray[operatorArray.length - 1])) {
+                    valueArray.push(partialEvaluation(operatorArray.pop(), valueArray.pop(), valueArray.pop()));
+                }
+                operatorArray.push(char);
             }
-            operatorArray.push(char);
         }
     }
     while (operatorArray.length) {
-        let operator = operatorArray.pop();
-        let secondVal = valueArray.pop();
-        let firstVal = valueArray.pop();
-        valueArray.push(partialEvaluation(operator, firstVal, secondVal));
+        valueArray.push(partialEvaluation(operatorArray.pop(), valueArray.pop(), valueArray.pop()));
+    }
+    //treating divide by 0 case
+    if (valueArray[0] == Number.POSITIVE_INFINITY || valueArray[0] == Number.NEGATIVE_INFINITY) {
+        return null;
     }
     return valueArray[0];
+}
+
+function handleMultipleCharacterOperand(valueArray, char, index) {
+    let operandValue = char;
+    for (let j = index + 1; j < expression.length; j++, index++) {
+        let numberChar = expression[j];
+        if (isLeftParan(numberChar) || isRightParan(numberChar) || isOperator(numberChar)) {
+            break;
+        }
+        operandValue += numberChar;
+    }
+    valueArray.push(+operandValue);
+    return index;
 }
 
 function getPriority(char) {
@@ -57,6 +62,7 @@ function getPriority(char) {
 }
 
 function isNumber(char) {
+    if (char === "0") return true;
     return (+char) ? true : false;
 }
 
@@ -73,7 +79,7 @@ function isOperator(char) {
 
 }
 
-function partialEvaluation(operator, firstValue, secondValue) {
+function partialEvaluation(operator, secondValue, firstValue) {
     switch (operator) {
         case "+":
             return firstValue + secondValue;
@@ -122,7 +128,7 @@ function showResult() {
     if (evaluateExp(expression)) {
         expression = evaluateExp(expression);
         showExpression();
-    } else {
+    } else if (expression.length > 0) {
         showWrongResultWarning();
     }
     showPartialResult();
@@ -130,7 +136,7 @@ function showResult() {
 
 function showWrongResultWarning() {
     let display = document.querySelector(".display__expression");
-    display.textContent = "bad expression";
+    display.textContent = "BAD EXPRESSION";
 }
 
 function handleUndoBtn() {
@@ -149,12 +155,3 @@ function handleClearBtn(button) {
         showPartialResult();
     });
 }
-
-/*
-TODOS:
-- keyboard support
-- divide by 0
-- button styling
-- fancy error display
-
-*/
