@@ -119,13 +119,14 @@ function showExpression() {
 
 function showPartialResult() {
     let display = document.querySelector(".display__partial-result");
-    if (evaluateExp(expression))
+    if (evaluateExp(expression) || evaluateExp(expression) === 0)
         display.textContent = evaluateExp(expression);
     else display.textContent = "";
 }
 
 function showResult() {
-    if (evaluateExp(expression)) {
+
+    if (evaluateExp(expression) || evaluateExp(expression) === 0) {
         expression = evaluateExp(expression);
         showExpression();
     } else if (expression.length > 0) {
@@ -155,3 +156,29 @@ function handleClearBtn(button) {
         showPartialResult();
     });
 }
+
+document.addEventListener("keydown", function(e) {
+    let expressionSymbols = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "+", "/", "*", "%", ".", "(", ")"];
+    let key = e.key;
+    if (expressionSymbols.includes(key)) {
+        expression += key;
+        showExpression();
+        showPartialResult();
+    } else if (key === "Enter")
+        showResult();
+    else if (key === "Backspace") {
+        expression = expression.slice(0, expression.length - 1);
+        showExpression();
+        showPartialResult();
+    } else if (key.toLowerCase() === "c") {
+        expression = "";
+        showExpression();
+        showPartialResult();
+    }
+
+
+});
+
+/*
+bug: -5-5-2
+*/
