@@ -1,5 +1,6 @@
 let expression = "";
 addButtonsEventListeners();
+addKeyboardSuport();
 
 function evaluateExp(expression) {
     let valueArray = [];
@@ -157,27 +158,27 @@ function handleClearBtn(button) {
     });
 }
 
-document.addEventListener("keydown", function(e) {
-    let expressionSymbols = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "+", "/", "*", "%", ".", "(", ")"];
-    let key = e.key;
-    if (expressionSymbols.includes(key)) {
-        expression += key;
-        showExpression();
-        showPartialResult();
-    } else if (key === "Enter")
-        showResult();
-    else if (key === "Backspace") {
-        expression = expression.slice(0, expression.length - 1);
-        showExpression();
-        showPartialResult();
-    } else if (key.toLowerCase() === "c") {
-        expression = "";
-        showExpression();
-        showPartialResult();
-    }
-
-
-});
+function addKeyboardSuport() {
+    document.addEventListener("keydown", function(e) {
+        let expressionSymbols = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "+", "/", "*", "%", ".", "(", ")"];
+        let key = e.key;
+        if (expressionSymbols.includes(key)) {
+            expression += key;
+            showExpression();
+            showPartialResult();
+        } else if (key === "Enter")
+            showResult();
+        else if (key === "Backspace") {
+            expression = expression.slice(0, expression.length - 1);
+            showExpression();
+            showPartialResult();
+        } else if (key.toLowerCase() === "c") {
+            expression = "";
+            showExpression();
+            showPartialResult();
+        }
+    });
+}
 
 /*
 bug: -5-5-2
