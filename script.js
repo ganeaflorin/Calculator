@@ -1,6 +1,11 @@
 let expression = "";
-addButtonsEventListeners();
-addKeyboardSuport();
+initEvents();
+
+function initEvents() {
+    addButtonsEventListeners();
+    addKeyboardSuport();
+
+}
 
 function evaluateExp(expression) {
     let valueArray = [];
